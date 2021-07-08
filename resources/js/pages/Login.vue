@@ -93,7 +93,9 @@
                 this.login({ email, password })
                     .then((data) => {
                         console.log(data)
-                        this.$router.push('/')
+                        if (data.status === 200) {
+                            this.$router.push('/dashboard')
+                        }
                     })
                     // .catch(err => console.log(err, this.errors))
             }

@@ -1,7 +1,7 @@
 const users = {
     namespaced: true,
     state: {
-        isLoggedIn: false,
+        isLoggedIn: !!localStorage.getItem('token'),
         token: localStorage.getItem('token') ?? '',
         errors: {
             email: [],
@@ -39,20 +39,23 @@ const users = {
                     dispatch('updateLocalStorage', response.data.token)
                     commit('setIsLoggedIn', true)
                     commit('setErrors', {})
-                }).catch(function (error) {
-                if (error.response) {
-                    if (error.response.data.error) {
-                        commit('setErrors', {...error.response.data})
-                    } else {
-                        commit('setErrors', {...error.response.data.errors})
-                    }
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
 
+                    return response
+                }).catch(function (error) {
+                    if (error.response) {
+                        if (error.response.data.error) {
+                            commit('setErrors', {...error.response.data})
+                        } else {
+                            commit('setErrors', {...error.response.data.errors})
+                        }
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        console.log(error.request);
+                    } else {
+                        console.log('Error', error.message);
+                    }
+
+                    return error.response
             });
         },
         updateLocalStorage({commit}, data) {

@@ -5,40 +5,52 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 
 Vue.use(Router)
+
 const router = new Router({
     history: true,
     mode: 'history',
     routes: [
         {
             path: '/login',
-            name: 'Login',
-            component: Login
+            name: 'login',
+            component: Login,
+            meta: {
+                auth: false,
+            }
         },
         {
             path: '/register',
-            name: 'Register',
-            component: Register
+            name: 'register',
+            component: Register,
+            meta: {
+                auth: false,
+            }
         },
         {
-            path: '/',
-            name: 'Dashboard',
-            component: Dashboard
+            path: '/dashboard',
+            name: 'dashboard',
+            component: Dashboard,
+            meta: {
+                auth: true,
+            }
         },
-        // { path: '*', redirect: '/' }
     ]
 })
 
 router.beforeEach((to, from, next) => {
-    // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login', '/register'];
-    const authRequired = !publicPages.includes(to.path);
+    const authRequired = to.matched.some(route => route.meta.auth)
     const loggedIn = localStorage.getItem('token');
-
-    if (authRequired && !loggedIn) {
-        return next('/login');
+    console.log(to.name)
+    if (authRequired && !loggedIn && to.name !== 'login') {
+        console.log(111111)
+            next('/login')
+    } else if (loggedIn && to.name !== 'dashboard') {
+        console.log(222222)
+        next('/dashboard')
+    } else {
+        console.log(333333)
+        next();
     }
-
-    next();
 })
 
 export default router

@@ -53,7 +53,7 @@
                                                   label-for="password_confirmationInput">
                                         Password
                                         <b-form-input id="password_confirmationInput"
-                                                      type="password_confirmation"
+                                                      type="password"
                                                       name="password_confirmation"
                                                       v-model="password_confirmation"
                                                       required
